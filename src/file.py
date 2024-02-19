@@ -18,4 +18,4 @@ def main():
         raise ValueError("only the name of the instance should be given as parameter")
     u_size, s_size, s, sol, seq = read_instance(sys.argv[1])
 
-main()
+#main()
