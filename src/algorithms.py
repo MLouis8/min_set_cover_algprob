@@ -14,14 +14,8 @@ def naive_approx(S, seq, min=False, rdm=True):
     Comments:
     Performs well on instance_1y and taking the smallest set performs well on instance_1x
     """
-    if min:
-        compare = lambda a, b: a < b
-    else:
-        compare = lambda a, b: a > b
-    if rdm:
-        choice = lambda x: random.choice(x)
-    else:
-        choice = lambda x: x[0]
+    compare = lambda a, b: a < b if min else lambda a, b: a > b
+    choice = lambda x: random.choice(x) if rdm else lambda x: x[0]
     cover = set() # set containing S_i
     cover_union = set()
     S =  list(S.items())
@@ -45,5 +39,4 @@ def naive_approx(S, seq, min=False, rdm=True):
 
             cover.add(choice(choose_S_i))
             cover_union.union(S[i][1])
-
     return cover
