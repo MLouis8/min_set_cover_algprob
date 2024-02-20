@@ -18,7 +18,7 @@ def main():
         raise ValueError("only the name of the instance should be given as parameter")
     u_size, s_size, s, sol, seq = file.read_instance(sys.argv[1])
 
-    print(algorithms.naive_approx(u_size, s, s_size, seq))
+    print(algorithms.naive_approx(s, seq))
 
 
 main()
