@@ -25,7 +25,7 @@ def naive_approx(u_size, S, s_size, seq):
                 if sigma_i in S_i:
                     #print("sigma_i in S_i:", sigma_i, S_i)
                     discovery_size = len(S_i) - len(S_i.intersection(cover_union))
-                    if  discovery_size < max_discovery:
+                    if  discovery_size > max_discovery:
                         choose_S_i = [i]
                         max_discovery = discovery_size 
                     if discovery_size == max_discovery:
