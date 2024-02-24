@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import file
 import algorithms
 import sys
@@ -24,14 +25,65 @@ def verify_sol(sol, seq):
     return True
 
 def main():
-    repeat = 30 if len(sys.argv) == 2 else sys.argv[2]
-    costs = []
-    u_size, s_size, s, sol, seq = file.read_instance(sys.argv[1])
-    for k in range(repeat):
-        cover_idx = algorithms.naive_approx(s, seq)
-        costs.append(len(cover_idx))
-    confidence_at = 5.
-    average_value = np.mean(costs)
-    confidence_level = np.percentile(costs, [confidence_at/2, 100 - confidence_at/2])
-    print(f"mean in interval : {average_value} inside {confidence_level}\ncompared to exact solution: {sol}")
+    # repeat = 30 if len(sys.argv) == 2 else sys.argv[2]
+    # costs = []
+    # u_size, s_size, s, sol, seq = file.read_instance(sys.argv[1])
+    # for k in range(repeat):
+    #     cover_idx = algorithms.naive_approx(s, seq)
+    #     costs.append(len(cover_idx))
+    # confidence_at = 5.
+    # average_value = np.mean(costs)
+    # confidence_level = np.percentile(costs, [confidence_at/2, 100 - confidence_at/2])
+    # print(f"mean in interval : {average_value} inside {confidence_level}\ncompared to exact solution: {sol}")
+    instances = [
+        "instance_1x",
+        "instance_1y",
+        "instance_2a",
+        "instance_2x",
+        "instance_2y",
+        "instance_3.1a",
+        "instance_3.3a",
+        "instance_10a",
+        "instance_11a",
+        "instance_12a",
+        "instance_13a",
+        "instance_14a",
+        "instance_15a",
+        "instance_16a",
+        "instance_16b",
+        "instance_17a",
+        "instance_17b",
+        "instance_17c",
+        "instance_19a",
+        "instance_19b",
+        "instance_19c"
+    ]
+    solutions, cmax, cmin, crandom = [], [], [], []
+    for instance in instances:
+        if instance == "instance_3.3a":
+            solutions.append(sol)
+            cmax.append(0)
+            cmin.append(0)
+            crandom.append(0)
+            continue
+        _, _, s, sol, seq = file.read_instance(instance)
+        solutions.append(sol)
+        naive_max, naive_min, full_random = [], [], []
+        for _ in range(100):
+            naive_max.append(len(algorithms.naive_approx(s, seq)))
+            naive_min.append(len(algorithms.naive_approx(s, seq, min=True)))
+            full_random.append(len(algorithms.full_random_approx(s, seq)))
+        cmax.append(np.mean(naive_max))
+        cmin.append(np.mean(naive_min))
+        crandom.append(np.mean(full_random))
+        print(f"{instance} done")
+    fig, ax = plt.subplots()
+    instances_name = [instance[9:] for instance in instances]
+    ax.plot(instances_name, solutions, label="sol")
+    ax.plot(instances_name, cmax, label="max")
+    ax.plot(instances_name, cmin, label="min")
+    ax.plot(instances_name, crandom, label="random")
+    ax.legend()
+    plt.show()
+
 main()
