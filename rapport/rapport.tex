@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Rapport MIN SET COVER \emph{online}}
+\author{Georg Dorndorf, Louis Milhaud \& Niranjan Nair}
+\date{February 2024}
+
+\begin{document}
+
+\maketitle
+
+\section{Problem}
+\textbf{Input:}
+\begin{itemize}
+    \item a set universe $U = \{0, 1, ..., n-1\}$
+    \item a collection $S$ of $m$ subsets $S_i$ of $U$ such that $$\bigcup_{i = 0}^m S_i = U$$
+    \item a sequence $\sigma$ of size $k$ of elements of $U^* \subseteq U$
+\end{itemize}
+\textbf{Objective:}\\
+Find a collection $S' \subseteq S$ such that $\sigma$ is covered at all time and $|S'|$ is minimum.
+
+\section{Algorithms}
+$\forall\ 0 \leq i \leq k$ let $C_i \subseteq S$ be the collection of sets containing $\sigma_i$.\\
+\subsection{Full random algorithm}
+\begin{itemize}
+    \item[-] \textbf{Description:}\\
+    $\forall\ 0 \leq i \leq k$:\\
+    If $\sigma_i$ is already covered, we go to the next element in the sequence.\\
+    Else we randomly select a set in $C_i$.
+    \item[-] \textbf{Competitivity ratio:}
+\end{itemize}
+\subsection{Biggest cover algorithm}
+\begin{itemize}
+    \item[-] \textbf{Description:}
+    $\forall\ 0 \leq i \leq k$:\\
+    If $\sigma_i$ is already covered, we go to the next element in the sequence.\\
+    Else we select $S_\diamond\in C_i$ such that $S_\diamond$ contains the most uncovered elements:
+    $$|S_\diamond| = \max_{0\leq j\leq m}\{|S_j| - |S_j\cap S'|\}$$ with $S'$ the current cover
+    \item[-] \textbf{Competitivity ratio:}
+\end{itemize}
+\subsection{Excellent algorithm}
+\begin{itemize}
+    \item[-] \textbf{Description:}
+    
+    \item[-] \textbf{Competitivity ratio:}
+\end{itemize}
+\section{Results}
+% TODO: add the image of the algorithms runs on all the instances + 95% interval for the best + observations
+\end{document}
