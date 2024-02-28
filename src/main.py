@@ -24,6 +24,68 @@ def verify_sol(sol, seq):
             return False
     return True
 
+def bar_plot(ax, data, colors=None, total_width=0.8, single_width=1):
+    """Draws a bar plot with multiple bars per data point.
+
+    Parameters
+    ----------
+    ax : matplotlib.pyplot.axis
+        The axis we want to draw our plot on.
+
+    data: dictionary
+        A dictionary containing the data we want to plot. Keys are the names of the
+        data, the items is a list of the values.
+
+        Example:
+        data = {
+            "x":[1,2,3],
+            "y":[1,2,3],
+            "z":[1,2,3],
+        }
+
+    colors : array-like, optional
+        A list of colors which are used for the bars. If None, the colors
+        will be the standard matplotlib color cyle. (default: None)
+
+    total_width : float, optional, default: 0.8
+        The width of a bar group. 0.8 means that 80% of the x-axis is covered
+        by bars and 20% will be spaces between the bars.
+
+    single_width: float, optional, default: 1
+        The relative width of a single bar within a group. 1 means the bars
+        will touch eachother within a group, values less than 1 will make
+        these bars thinner.
+    """
+
+    # Check if colors where provided, otherwhise use the default color cycle
+    if colors is None:
+        colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+
+    # Number of bars per group
+    n_bars = len(data)
+
+    # The width of a single bar
+    bar_width = total_width / n_bars
+
+    # List containing handles for the drawn bars, used for the legend
+    bars = []
+
+    # Iterate over all data
+    for i, (_, values) in enumerate(data.items()):
+        # The offset in x direction of that bar
+        x_offset = (i - n_bars / 2) * bar_width + bar_width / 2
+
+        # Draw a bar for every value of that type
+        for x, y in enumerate(values):
+            bar = ax.bar(x + x_offset, y, width=bar_width * single_width, color=colors[i % len(colors)])
+
+        # Add a handle to the last drawn bar, which we'll need for the legend
+        bars.append(bar[0])
+
+    ax.legend(bars, data.keys())
+    ax.set_ylabel("competitivity ratio")
+    ax.set_xlabel("instances")
+
 def main():
     # repeat = 30 if len(sys.argv) == 2 else sys.argv[2]
     # costs = []
@@ -61,13 +123,13 @@ def main():
     solutions, cmax, cmin, crandom, clognlogm = [], [], [], [], []
 
     for instance in instances:
-        if instance == "instance_3.3a":
-            solutions.append(sol)
-            cmax.append(0)
-            cmin.append(0)
-            crandom.append(0)
-            clognlogm.append(0)
-            continue
+        # if instance == "instance_3.3a":
+        #     solutions.append(sol)
+        #     cmax.append(0)
+        #     cmin.append(0)
+        #     crandom.append(0)
+        #     clognlogm.append(0)
+        #     continue
         _, _, s, sol, seq = file.read_instance(instance)
         solutions.append(sol)
         naive_max, naive_min, full_random, lognlogm = [], [], [], []
@@ -82,15 +144,26 @@ def main():
         crandom.append(np.mean(full_random))
         clognlogm.append(np.mean(lognlogm))
         print(f"{instance} done")
-    fig, ax = plt.subplots()
     instances_name = [instance[9:] for instance in instances]
-    ax.plot(instances_name, solutions, label="sol")
-    ax.plot(instances_name, cmax, label="max")
-    ax.plot(instances_name, cmin, label="min")
-    ax.plot(instances_name, crandom, label="random")
-    ax.plot(instances_name, clognlogm, label="lognlogm")
+    solutions = np.array(solutions)
+    rmax = np.array(cmax) / solutions
+    rmin = np.array(cmin) / solutions
+    rrandom = np.array(crandom) / solutions
+    rlognlogm = np.array(clognlogm) / solutions
+    # ax.plot(instances_name, solutions, label="sol")
+    # ax.bar(instances_name, cmax/solutions, label="max", alpha=0.5)
+    # ax.bar(instances_name + x_offset, cmin/solutions, label="min", alpha=0.5)
+    # ax.scatter(instances_name, crandom/solutions, label="random", alpha=0.5)
+    # ax.scatter(instances_name, clognlogm/solutions, label="lognlogm")
+    data = {
+        "max": rmax,
+        "min": rmin,
+        "random": rrandom,
+        "lognlogm": rlognlogm
+    }
 
-    ax.legend()
+    _, ax = plt.subplots()
+    bar_plot(ax, data, total_width=.8, single_width=1)
     plt.show()
 
 main()
