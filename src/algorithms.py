@@ -66,3 +66,87 @@ def full_random_approx(S, seq):
             cover.add(chosen)
             cover_union.union(S[chosen][1])
     return cover
+
+def lognlogm(S, seq):
+    """
+    Implements Alon, Noga, Baruch Awerbuch, Yossi Azar, and Niv Buchbinder. “The Online Set Cover Problem,” n.d.
+    """
+    correct_run=True
+
+    S = list(S.items())
+    cover = set()
+    cover_union = set()
+    weight = dict()
+    universe = set()
+
+    for s in S:
+        universe = universe.union(s[1])
+
+    for s in S:
+        weight[s[0]] = 1/(2 * len(S))
+
+    def update_element_weights(weight):
+        for x in universe:
+            weight[x] = 0
+            for s in S:
+                if x in s[1]:
+                    weight[x] = weight[x]+weight[s[0]]
+
+    def phi(weight, cover_union):
+        res = 0
+        for j in (universe - cover_union):
+            res += pow(len(universe),2*weight[j])
+        return res
+
+    update_element_weights(weight)
+    for sigma_i in seq:
+        if weight[sigma_i] >=1 and sigma_i in cover_union:
+            pass
+        else:
+            old_phi = phi(weight, cover_union)
+            
+            k =  math.ceil(math.log(1/weight[sigma_i])/math.log(2))
+            #print(math.pow(2,k)*weight[sigma_i])
+            for s in S:
+                weight[s[0]] = math.pow(2, k) * weight[s[0]]
+            update_element_weights(weight)
+
+            chosen = 0
+            for i,S_i in enumerate(S):
+                S_i = S_i[1]
+
+                if chosen > (4* math.log(len(universe))):
+                    #print("added too many elements")
+                    break
+                if phi(weight, cover_union) < old_phi:
+                    #print("reduced phi")
+                    break
+                
+                options = []
+                if sigma_i in S_i:
+                    options.append(i)
+                    x = len(cover_union)
+                    cover.add(i)
+                    cover_union = cover_union.union(S_i)
+
+                    added = len(cover_union)-x
+                    chosen +=1
+            update_element_weights(weight)
+                    
+        def in_cover(sigma):
+            in_c = False
+            for c in cover:
+                if sigma in S[c][1]:
+                    in_c = True
+            if in_c:
+                if sigma not in cover_union:
+                    in_c=False
+
+            return in_c
+        if not in_cover(sigma_i):
+            correct_run=False
+    if not correct_run:
+        print("Warning incorrect run.")
+    else:
+        print("Yay!")
+    return cover

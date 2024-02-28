@@ -58,24 +58,29 @@ def main():
         "instance_19b",
         "instance_19c"
     ]
-    solutions, cmax, cmin, crandom = [], [], [], []
+    solutions, cmax, cmin, crandom, clognlogm = [], [], [], [], []
+
     for instance in instances:
         if instance == "instance_3.3a":
             solutions.append(sol)
             cmax.append(0)
             cmin.append(0)
             crandom.append(0)
+            clognlogm.append(0)
             continue
         _, _, s, sol, seq = file.read_instance(instance)
         solutions.append(sol)
-        naive_max, naive_min, full_random = [], [], []
+        naive_max, naive_min, full_random, lognlogm = [], [], [], []
+
         for _ in range(100):
             naive_max.append(len(algorithms.naive_approx(s, seq)))
             naive_min.append(len(algorithms.naive_approx(s, seq, min=True)))
             full_random.append(len(algorithms.full_random_approx(s, seq)))
+            lognlogm.append(len(algorithms.lognlogm(s, seq)))
         cmax.append(np.mean(naive_max))
         cmin.append(np.mean(naive_min))
         crandom.append(np.mean(full_random))
+        clognlogm.append(np.mean(lognlogm))
         print(f"{instance} done")
     fig, ax = plt.subplots()
     instances_name = [instance[9:] for instance in instances]
@@ -83,6 +88,8 @@ def main():
     ax.plot(instances_name, cmax, label="max")
     ax.plot(instances_name, cmin, label="min")
     ax.plot(instances_name, crandom, label="random")
+    ax.plot(instances_name, clognlogm, label="lognlogm")
+
     ax.legend()
     plt.show()
 
