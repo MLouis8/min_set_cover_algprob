@@ -87,16 +87,6 @@ def bar_plot(ax, data, colors=None, total_width=0.8, single_width=1):
     ax.set_xlabel("instances")
 
 def main():
-    # repeat = 30 if len(sys.argv) == 2 else sys.argv[2]
-    # costs = []
-    # u_size, s_size, s, sol, seq = file.read_instance(sys.argv[1])
-    # for k in range(repeat):
-    #     cover_idx = algorithms.naive_approx(s, seq)
-    #     costs.append(len(cover_idx))
-    # confidence_at = 5.
-    # average_value = np.mean(costs)
-    # confidence_level = np.percentile(costs, [confidence_at/2, 100 - confidence_at/2])
-    # print(f"mean in interval : {average_value} inside {confidence_level}\ncompared to exact solution: {sol}")
     instances = [
         "instance_1x",
         "instance_1y",
@@ -123,13 +113,6 @@ def main():
     solutions, cmax, cmin, crandom, clognlogm = [], [], [], [], []
 
     for instance in instances:
-        # if instance == "instance_3.3a":
-        #     solutions.append(sol)
-        #     cmax.append(0)
-        #     cmin.append(0)
-        #     crandom.append(0)
-        #     clognlogm.append(0)
-        #     continue
         _, _, s, sol, seq = file.read_instance(instance)
         solutions.append(sol)
         naive_max, naive_min, full_random, lognlogm = [], [], [], []
@@ -144,17 +127,11 @@ def main():
         crandom.append(np.mean(full_random))
         clognlogm.append(np.mean(lognlogm))
         print(f"{instance} done")
-    instances_name = [instance[9:] for instance in instances]
     solutions = np.array(solutions)
     rmax = np.array(cmax) / solutions
     rmin = np.array(cmin) / solutions
     rrandom = np.array(crandom) / solutions
     rlognlogm = np.array(clognlogm) / solutions
-    # ax.plot(instances_name, solutions, label="sol")
-    # ax.bar(instances_name, cmax/solutions, label="max", alpha=0.5)
-    # ax.bar(instances_name + x_offset, cmin/solutions, label="min", alpha=0.5)
-    # ax.scatter(instances_name, crandom/solutions, label="random", alpha=0.5)
-    # ax.scatter(instances_name, clognlogm/solutions, label="lognlogm")
     data = {
         "max": rmax,
         "min": rmin,
