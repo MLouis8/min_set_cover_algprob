@@ -86,52 +86,68 @@ def lognlogm(S, seq):
         weight[s[0]] = 1/(2 * len(S))
 
     def update_element_weights(weight):
-        for x in universe:
-            weight[x] = 0
+        for j in universe:
+            weight[j] = 0
             for s in S:
-                if x in s[1]:
-                    weight[x] = weight[x]+weight[s[0]]
+                if j in s[1]:
+                    weight[j] = weight[j]+weight[s[0]]
 
     def phi(weight, cover_union):
         res = 0
         for j in (universe - cover_union):
+            #print("u", universe,"c", cover,"u-c", universe-cover)
             res += pow(len(universe),2*weight[j])
         return res
 
     update_element_weights(weight)
     for sigma_i in seq:
-        if weight[sigma_i] >=1 and sigma_i in cover_union:
+        if weight[sigma_i] >=1:# and sigma_i in cover_union:
             pass
         else:
             old_phi = phi(weight, cover_union)
             
             k =  math.ceil(math.log(1/weight[sigma_i])/math.log(2))
+            if math.pow(2,k)*weight[sigma_i] <1:
+                print("shit")
+            if not math.pow(2,k-1)*weight[sigma_i] <1:
+                print("shit2")
             #print(math.pow(2,k)*weight[sigma_i])
-            for s in S:
-                weight[s[0]] = math.pow(2, k) * weight[s[0]]
+            for s_name, s in S:
+                if sigma_i in s:
+                    weight[s_name] = math.pow(2, k) * weight[s_name]
             update_element_weights(weight)
 
             chosen = 0
+            
+            options = []
             for i,S_i in enumerate(S):
                 S_i = S_i[1]
-
-                if chosen > (4* math.log(len(universe))):
-                    #print("added too many elements")
-                    break
-                if phi(weight, cover_union) < old_phi:
-                    #print("reduced phi")
-                    break
                 
-                options = []
                 if sigma_i in S_i:
                     options.append(i)
-                    x = len(cover_union)
-                    cover.add(i)
-                    cover_union = cover_union.union(S_i)
+                
+            cover_union_copy = cover_union.copy()
+            cover_copy = cover.copy()
 
-                    added = len(cover_union)-x
+            while(phi(weight, cover_union) > old_phi):
+                success = False
+                chosen = 0
+                while(chosen < (4* math.log(len(universe)))):
+                    c = random.choice(options)
+                    cover.add(c)
+                    cover_union = cover_union.union(S[c][1])
                     chosen +=1
-            update_element_weights(weight)
+
+                    if phi(weight, cover_union) <= old_phi:
+                        success =True
+                        break
+                if success:
+                    break
+                else:
+                    cover = cover_copy.copy()
+                    cover_union = cover_union_copy.copy()
+           
+           
                     
         def in_cover(sigma):
             in_c = False
@@ -147,6 +163,6 @@ def lognlogm(S, seq):
             correct_run=False
     if not correct_run:
         print("Warning incorrect run.")
-    else:
-        print("Yay!")
+    # else:
+    #     print("Yay!")
     return cover
