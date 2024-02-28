@@ -1,0 +1,77 @@
+\documentclass[aspectratio=169]{beamer}
+\usetheme{metropolis}
+
+\usepackage{roboto}
+\usepackage{mathtools}
+\usepackage{fixmath}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{stmaryrd}
+
+\graphicspath{ {./images/} }
+\setbeamertemplate{navigation symbols}{}
+
+\DeclarePairedDelimiter\Brackets{\llbracket}{\rrbracket}
+
+\title{MIN SET COVER online}
+\author{Georg Dorndorf, Louis Milhaud \& Niranjan Nair}
+\institute{Université Paris Saclay}
+\date{\today}
+
+\begin{document}
+
+    \AtBeginSection[]{
+    \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=true,rounded=true]{title}
+        \usebeamerfont{title}\insertsectionhead\par%
+    \end{beamercolorbox}
+    \vfill
+    \end{frame}
+    }
+    % frame 1
+    \begin{frame}
+        \titlepage
+    \end{frame}
+
+    % frame 2
+    \begin{frame}
+        \frametitle{Outline}
+        \tableofcontents
+    \end{frame}
+
+    % frame 3
+    \section{The Problem}
+    % frame 4
+    \begin{frame}
+        \textbf{Input:}
+        \begin{itemize}
+            \item a set universe $U = \{0, 1, ..., n-1\}$
+            \item a collection $S$ of $m$ subsets $S_i$ of $U$ such that $$\bigcup_{i = 0}^m S_i = U$$
+            \item a sequence $\sigma$ of size $k$ of elements of $U^* \subseteq U$
+        \end{itemize}
+        \vspace{10pt}
+        \textbf{Objective:}\\
+        Find a collection $S' \subseteq S$ such that $\sigma$ is covered at all time and $|S'|$ is minimum.
+    \end{frame}
+    %frame 5
+    \section{Algorithms}
+    
+    \subsection{Full random algorithm}
+    %frame 6
+    \begin{frame}{Full random algorithm}
+        $\forall\ 0 \leq i \leq k$ let $C_i \subseteq S$ be the collection of sets containing $\sigma_i$
+    \end{frame}
+    
+    \subsection{Biggest cover algorithm}
+    %frame 7
+    \begin{frame}{Biggest cover algorithm}
+        $\forall\ 0 \leq i \leq k$ let $C_i \subseteq S$ be the collection of sets containing $\sigma_i$
+    \end{frame}
+    \section{Results}
+    \begin{frame}
+        
+    \end{frame}
+
+\end{document}
