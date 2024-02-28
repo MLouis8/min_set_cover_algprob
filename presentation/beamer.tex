@@ -7,6 +7,8 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{stmaryrd}
+\usepackage{listings}
+\usepackage{minted}
 
 \graphicspath{ {./images/} }
 \setbeamertemplate{navigation symbols}{}
@@ -42,36 +44,54 @@
     \end{frame}
 
     % frame 3
-    \section{The Problem}
-    % frame 4
-    \begin{frame}
-        \textbf{Input:}
-        \begin{itemize}
-            \item a set universe $U = \{0, 1, ..., n-1\}$
-            \item a collection $S$ of $m$ subsets $S_i$ of $U$ such that $$\bigcup_{i = 0}^m S_i = U$$
-            \item a sequence $\sigma$ of size $k$ of elements of $U^* \subseteq U$
-        \end{itemize}
-        \vspace{10pt}
-        \textbf{Objective:}\\
-        Find a collection $S' \subseteq S$ such that $\sigma$ is covered at all time and $|S'|$ is minimum.
-    \end{frame}
-    %frame 5
     \section{Algorithms}
     
     \subsection{Full random algorithm}
     %frame 6
-    \begin{frame}{Full random algorithm}
-        $\forall\ 0 \leq i \leq k$ let $C_i \subseteq S$ be the collection of sets containing $\sigma_i$
+    \begin{frame}[fragile]{Full random algorithm}
+    Pseudo-python code for the naive random algorithm:
+    \rule{\textwidth}{1pt}
+    \scriptsize
+    \begin{minted}{python}
+        for sigma_i in sequence:
+            if sigma_i in cover:
+                continue
+            else:
+                c_i = all_sets_containing_sigma_i(sigma_i, S)
+                cover.add(random.choice(c_i))
+    \end{minted}
+    \rule{\textwidth}{1pt}
     \end{frame}
     
     \subsection{Biggest cover algorithm}
     %frame 7
-    \begin{frame}{Biggest cover algorithm}
-        $\forall\ 0 \leq i \leq k$ let $C_i \subseteq S$ be the collection of sets containing $\sigma_i$
+    \begin{frame}[fragile]{Biggest cover algorithm}
+    Pseudo-python code for the biggest cover algorithm:
+    \rule{\textwidth}{1pt}
+    \scriptsize
+    \begin{minted}{python}
+        for sigma_i in sequence:
+            if sigma_i in cover:
+                continue
+            else:
+                c_i = all_sets_containing_sigma_i(sigma_i, S)
+                for c_j_i in c_i:
+                    uncovered_size = len(c_j_i) - len(c_j_i.inter(covered_elem))
+                    if uncovered_len > max_uncovered_len:
+                        choice = c_j_i
+                        max_uncovered_size = uncovered_size
+    \end{minted}
+    \rule{\textwidth}{1pt}
     \end{frame}
-    \section{Results}
-    \begin{frame}
-        
+    
+    \section{Competitivity}
+    \begin{frame}{Costs comparison}
+        \hspace*{-1.05in}
+        \includegraphics[scale=0.48]{images/costs.png}
+    \end{frame}
+    \begin{frame}{Competitivity ratios}
+        \hspace*{-1in}
+        \includegraphics[scale=0.5]{images/competitivity ratio.png}
     \end{frame}
 
 \end{document}
